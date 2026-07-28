@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quorvox</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #000;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .logo svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #000;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.6;
+        }
+
+        .resume-btn {
+            background: #000;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: transform 0.3s;
+        }
+
+        .resume-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .mobile-menu span {
+            width: 25px;
+            height: 3px;
+            background: #000;
+            transition: 0.3s;
+        }
+
+        .mobile-menu.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .mobile-menu.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            z-index: 999;
+        }
+
+        .mobile-nav.active {
+            display: block;
+        }
+
+        .mobile-nav ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .mobile-nav a {
+            text-decoration: none;
+            color: #000;
+            font-weight: 600;
+            font-size: 18px;
+            display: block;
+            padding: 10px 0;
+        }
+
+        .mobile-nav .resume-btn {
+            display: inline-flex;
+            margin-top: 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            padding: 80px 5%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            min-height: 80vh;
+        }
+
+        .hero-content h1 {
+            font-size: 48px;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero-content h1 strong {
+            font-weight: 800;
+        }
+
+        .hero-content p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            width: 48px;
+            height: 48px;
+            border: 2px solid #000;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .social-links a:first-child {
+            background: #000;
+        }
+
+        .social-links a:first-child svg {
+            fill: #fff;
+        }
+
+        .social-links a:hover {
+            background: #000;
+            transform: translateY(-3px);
+        }
+
+        .social-links a:hover svg {
+            fill: #fff;
+        }
+
+        .hero-image {
+            position: relative;
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+        }
+
+        /* Skills Section */
+        .skills {
+            padding: 100px 5%;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 60px;
+            font-weight: 700;
+        }
+
+        .section-title strong {
+            font-weight: 800;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .skill-card {
+            border: 2px solid #000;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .skill-card:hover {
+            background: #000;
+            color: #fff;
+            transform: translateY(-5px);
+        }
+
+        .skill-card svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 15px;
+        }
+
+        .skill-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .skill-card.highlight {
+            background: #000;
+            color: #fff;
+        }
+
+        /* Experience Section (Dark) */
+        .experience {
+            background: #0a0a0a;
+            color: #fff;
+            padding: 100px 5%;
+        }
+
+        .experience .section-title {
+            color: #fff;
+        }
+
+        .experience-cards {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .exp-card {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s;
+        }
+
+        .exp-card:hover {
+            transform: translateX(10px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .exp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .exp-company {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .exp-company svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .exp-date {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .exp-description {
+            color: #bbb;
+            line-height: 1.8;
+        }
+
+        /* About Section */
+        .about {
+            padding: 100px 5%;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 80px;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .about-image {
+            border: 3px solid #000;
+            border-radius: 20px;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .about-content h2 {
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+
+        .about-content strong {
+            font-weight: 800;
+        }
+
+        .about-content p {
+            margin-bottom: 20px;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        /* Projects Section (Dark) */
+        .projects {
+            background: #0a0a0a;
+            color: #fff;
+            padding: 100px 5%;
+        }
+
+        .projects .section-title {
+            color: #fff;
+        }
+
+        .projects-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 80px;
+        }
+
+        .project-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .project-item:nth-child(even) {
+            direction: rtl;
+        }
+
+        .project-item:nth-child(even) > * {
+            direction: ltr;
+        }
+
+        .project-image {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .project-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.3s;
+        }
+
+        .project-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .project-info h3 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .project-info p {
+            color: #999;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: gap 0.3s;
+        }
+
+        .project-link:hover {
+            gap: 15px;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 100px 5%;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto 80px;
+        }
+
+        .testimonial-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .testimonial-card:hover {
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .testimonial-card.dark {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        .testimonial-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            overflow: hidden;
+            border: 3px solid #000;
+        }
+
+        .testimonial-card.dark .testimonial-avatar {
+            border-color: #fff;
+        }
+
+        .testimonial-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .testimonial-text {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        .testimonial-card.dark .testimonial-text {
+            color: #ccc;
+        }
+
+        .testimonial-name {
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .testimonial-role {
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 80px 5%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            padding: 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: #000;
+        }
+
+        .contact-form textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: #000;
+            color: #fff;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .contact-info h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .contact-info p {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .contact-details {
+            margin-top: 40px;
+        }
+
+        .contact-details p {
+            margin-bottom: 10px;
+            color: #000;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        footer {
+            background: #000;
+            color: #fff;
+            padding: 30px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+        }
+
+        .footer-right {
+            text-align: right;
+            font-size: 14px;
+            color: #999;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links,
+            .resume-btn {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: flex;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-content h1 {
+                font-size: 32px;
+            }
+
+            .hero-image {
+                order: -1;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+
+            .about {
+                grid-template-columns: 1fr;
+            }
+
+            .project-item,
+            .project-item:nth-child(even) {
+                grid-template-columns: 1fr;
+                direction: ltr;
+            }
+
+            .contact {
+                grid-template-columns: 1fr;
+            }
+
+            .skills-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-content,
+        .skill-card,
+        .exp-card,
+        .project-item,
+        .testimonial-card {
+            animation: fadeIn 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 2L4 8v16l12 6 12-6V8L16 2z" fill="#000"/>
+                <path d="M16 6l8 4v8l-8 4-8-4v-8l8-4z" fill="#fff"/>
+            </svg>
+            Personal
+        </div>
+        <ul class="nav-links">
+            <li><a href="#home">Я Тут</a></li>
+            <li><a href="#skills">Что Умею</a></li>
+            <li><a href="#projects">Проекты</a></li>
+            <li><a href="#contact">Контакты</a></li>
+        </ul>
+        <a href="https://disk.yandex.ru/i/cm6QqY-mC9aIGg" target="_blank" class="resume-btn" download>
+            Resume
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+        </a>
+        <div class="mobile-menu" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav" id="mobileNav">
+        <ul>
+            <li><a href="#home" onclick="toggleMenu()">Я Тут</a></li>
+            <li><a href="#skills" onclick="toggleMenu()">Что Умею</a></li>
+            <li><a href="#projects" onclick="toggleMenu()">Проекты</a></li>
+            <li><a href="#contact" onclick="toggleMenu()">Контакты</a></li>
+            <li><a href="https://disk.yandex.ru/d/your-resume-link" target="_blank" class="resume-btn" download onclick="toggleMenu()">
+                Скачать Resume (PDF)
+            </a></li>
+        </ul>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Привет я <strong>Quorvox_team</strong>.<br>
+            <strong>Full-Stack Developer</strong><br>
+            Windows Android.</h1>
+            <p>Я Николай, программист и кодер, учусь и создаю проекты, ознакомиться можно в телеграм канале Quorvox_team. Беру заказы за минимальную плату, обращайтесь.</p>
+            <div class="social-links">
+                <a href="https://t.me/Quorvox_team" target="_blank" title="Telegram">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff">
+                        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                    </svg>
+                </a>
+                <a href="https://github.com/Quorvox" target="_blank" title="GitHub">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.941-2.611c3.14-.356 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.75c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                    </svg>
+                </a>
+                <a href="https://www.tiktok.com/@vainsgame?_r=1&_t=ZS-98QBKll3jKH" target="_blank" title="TikTok">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2F3u0PzD6AKy_uS7iPwyqKsLr5LPRQfFCp4CByVHYzA&s=10" alt="Quorvox_team">
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="skills" id="skills">
+        <h2 class="section-title">Мои <strong>Умения</strong></h2>
+        <div class="skills-grid">
+            <div class="skill-card">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M24 4L6 14v20l18 10 18-10V14L24 4z" fill="#F05032"/>
+                    <path d="M24 10l-12 7v14l12 7 12-7V17l-12-7z" fill="#fff"/>
+                    <path d="M18 22l6 8 6-8M18 28l6-8 6 8" stroke="#F05032" stroke-width="2"/>
+                </svg>
+                <h3>Git</h3>
+            </div>
+            <div class="skill-card highlight">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="48" height="48" rx="8" fill="#F7DF1E"/>
+                    <text x="24" y="32" text-anchor="middle" font-size="20" font-weight="bold" fill="#000">JS</text>
+                </svg>
+                <h3>Javascript</h3>
+            </div>
+            <div class="skill-card">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <text x="24" y="28" text-anchor="middle" font-size="24" font-family="cursive" font-weight="bold" fill="#000">Css</text>
+                </svg>
+                <h3>Css</h3>
+            </div>
+            <div class="skill-card">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M24 4C12.954 4 4 12.954 4 24s8.954 20 20 20 20-8.954 20-20S35.046 4 24 4z" fill="#339933"/>
+                    <path d="M24 12c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12z" fill="#339933"/>
+                </svg>
+                <h3>Node.Js</h3>
+            </div>
+            <div class="skill-card">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="48" height="48" rx="8" fill="#3776AB"/>
+                    <text x="24" y="30" text-anchor="middle" font-size="24" font-weight="bold" fill="#fff">S</text>
+                </svg>
+                <h3>Python</h3>
+            </div>
+            <div class="skill-card">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M24 4C12.954 4 4 12.954 4 24s8.954 20 20 20 20-8.954 20-20S35.046 4 24 4z" fill="#3DDC84"/>
+                    <path d="M24 12c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12z" fill="#fff"/>
+                </svg>
+                <h3>Android-St</h3>
+            </div>
+            <div class="skill-card">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M24 4L6 14v20l18 10 18-10V14L24 4z" fill="#2C3E50"/>
+                    <text x="24" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#fff">Lua</text>
+                </svg>
+                <h3>Lua</h3>
+            </div>
+            <div class="skill-card">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="48" height="48" rx="8" fill="#000"/>
+                    <text x="24" y="22" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">AI</text>
+                    <text x="24" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">Code</text>
+                </svg>
+                <h3>AI Code</h3>
+            </div>
+            <div class="skill-card">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M24 4C12.954 4 4 12.954 4 24s8.954 20 20 20 20-8.954 20-20S35.046 4 24 4z" fill="#E34F26"/>
+                    <text x="24" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">HTML</text>
+                </svg>
+                <h3>HTML</h3>
+            </div>
+            <div class="skill-card">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <text x="24" y="28" text-anchor="middle" font-size="24" font-family="cursive" font-weight="bold" fill="#000">React</text>
+                </svg>
+                <h3>React</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section class="experience" id="experience">
+        <h2 class="section-title">Мой <strong>Опыт</strong></h2>
+        <div class="experience-cards">
+            <div class="exp-card">
+                <div class="exp-header">
+                    <div class="exp-company">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="24" cy="24" r="20" fill="#4285F4"/>
+                            <path d="M24 14v20M14 24h20" stroke="#fff" stroke-width="4"/>
+                        </svg>
+                        Разработчик
+                    </div>
+                    <div class="exp-date">Ноябарь 2023</div>
+                </div>
+                <p class="exp-description">Создавали рабочий веб-чат для онлайн платформы</p>
+            </div>
+
+            <div class="exp-card">
+                <div class="exp-header">
+                    <div class="exp-company">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="48" height="48" rx="8" fill="#FF0000"/>
+                            <polygon points="20,16 32,24 20,32" fill="#fff"/>
+                        </svg>
+                        Руководитель отдела разработки
+                    </div>
+                    <div class="exp-date">Январь 2024</div>
+                </div>
+                <p class="exp-description">Руководил командой из 8 человек, создавали Android приложения, так же помогали в доработке уже сущетсвующих.</p>
+            </div>
+
+            <div class="exp-card">
+                <div class="exp-header">
+                    <div class="exp-company">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M24 4C12.954 4 4 12.954 4 24s8.954 20 20 20 20-8.954 20-20S35.046 4 24 4z" fill="#A2AAAD"/>
+                            <path d="M24 14c-5.523 0-10 4.477-10 10 0 5.523 4.477 10 10 10 5.523 0 10-4.477 10-10 0-5.523-4.477-10-10-10z" fill="#fff"/>
+                        </svg>
+                        Кодер
+                    </div>
+                    <div class="exp-date">Январь 2026</div>
+                </div>
+                <p class="exp-description">В команде Quorvox создаем проекты разной сложности, а так же активно берем заказы на разработку.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="about-image">
+            <img src="https://konstantin.no/wp-content/uploads/2024/11/Photo_About_Me.svg" alt="About Me">
+        </div>
+        <div class="about-content">
+            <h2>Кто <strong>Я</strong></h2>
+ <p>I'm Nikolai, a passionate full-stack developer who also specializes in creating applications for Android and Windows. I am very enthusiastic about bringing both the technical and visual aspects of digital products to life. High performance, great user experience, and delivering top-tier solutions whether through modern AI technologies or solid custom coding matters to me.</p>
+<p>My journey in development is driven by continuous growth and education. After completing intensive courses at Itcompot, I successfully passed competitive interviews to enter Maxitet, a top-tier college, securing a 100% full-tuition grant for my education. Today, I actively take on freelance projects and offer my expertise to scale and develop digital products from the ground up.</p>
+<p>When I'm not in full-on developer mode, I'm always open to new challenges and freelance opportunities to help businesses grow. You can follow my journey, check out my latest projects, or reach out for collaboration on my GitHub or through my social media channels.</p>
+</div>
+
+    </section>
+
+    <!-- Projects Section -->
+    <section class="projects" id="projects">
+        <h2 class="section-title">My <strong>Projects</strong></h2>
+        <div class="projects-grid">
+            <div class="project-item">
+                <div class="project-image">
+                    <img src="https://avatars.dzeninfra.ru/get-zen_brief/271828/pub_6a11d9e18b669d5195063fe5_6a11da11eabfd201e439ee03/scale_1200" alt="QuorStream">
+                </div>
+                <div class="project-info">
+                    <h3>01<br>QuorStream</h3>
+                    <p>Сервис для совместного просмотра видео в реальном времени. Разрабатывал Backend и Frontend часть.</p>
+                    <a href="#" class="project-link">
+                        View Project
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project-item">
+                <div class="project-info">
+                    <h3>02<br>QuorKick</h3>
+                    <p>Просмотр видео, фильмов, сериалов без прямой интеграции и привязки. Разрабатывал Backend</p>
+                    <a href="#" class="project-link">
+                        View Project
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
+                </div>
+                <div class="project-image">
+                    <img src="https://avatars.dzeninfra.ru/get-zen_brief/271828/pub_699d0ecd64a8661012e09dcc_699d0edbb9136848054abe8d/scale_1200" alt="QuorKick">
+                </div>
+            </div>
+
+            <div class="project-item">
+                <div class="project-image">
+                    <svg viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <rect x="40" y="40" width="140" height="100" rx="10" fill="#fff" opacity="0.9"/>
+                        <rect x="60" y="60" width="80" height="12" rx="6" fill="#4facfe"/>
+                        <rect x="60" y="85" width="100" height="8" rx="4" fill="#00f2fe"/>
+                        <rect x="60" y="105" width="90" height="8" rx="4" fill="#4facfe"/>
+                        <rect x="220" y="60" width="140" height="100" rx="10" fill="#fff" opacity="0.9"/>
+                        <rect x="240" y="80" width="80" height="12" rx="6" fill="#4facfe"/>
+                        <rect x="240" y="105" width="100" height="8" rx="4" fill="#00f2fe"/>
+                        <rect x="100" y="170" width="200" height="110" rx="10" fill="#fff" opacity="0.9"/>
+                        <rect x="120" y="190" width="100" height="12" rx="6" fill="#4facfe"/>
+                        <rect x="120" y="215" width="160" height="8" rx="4" fill="#00f2fe"/>
+                    </svg>
+                </div>
+                <div class="project-info">
+                    <h3>03<br>WebSite</h3>
+                    <p>Разарабываю Веб-проекты если нужно:</p>
+                    <a href="#" class="project-link">
+                        View Project
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <h2 class="section-title">Моя<strong>Команда</strong></h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-avatar">
+                    <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="40" cy="40" r="40" fill="#667eea"/>
+                        <circle cx="40" cy="30" r="12" fill="#fff"/>
+                        <path d="M25 55 Q40 45 55 55" stroke="#fff" stroke-width="3" fill="none"/>
+                    </svg>
+                </div>
+                <p class="testimonial-text">Создаю анимации и активные фронт части проектов</p>
+                <div class="testimonial-name">Ромчик</div>
+                <div class="testimonial-role">Designer</div>
+            </div>
+
+            <div class="testimonial-card dark">
+                <div class="testimonial-avatar">
+                    <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="40" cy="40" r="40" fill="#fff"/>
+                        <circle cx="40" cy="30" r="12" fill="#000"/>
+                        <path d="M25 55 Q40 45 55 55" stroke="#000" stroke-width="3" fill="none"/>
+                    </svg>
+                </div>
+                <p class="testimonial-text">Frontend разработчик, использую react инфаструктуру.</p>
+                <div class="testimonial-name">Екатирина</div>
+                <div class="testimonial-role">Front-developer</div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="testimonial-avatar">
+                    <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="40" cy="40" r="40" fill="#667eea"/>
+                        <circle cx="40" cy="30" r="12" fill="#fff"/>
+                        <path d="M25 55 Q40 45 55 55" stroke="#fff" stroke-width="3" fill="none"/>
+                    </svg>
+                </div>
+                <p class="testimonial-text">Слежу за выполнением проектов</p>
+                <div class="testimonial-name">Максим</div>
+                <div class="testimonial-role">CEO</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <form class="contact-form" action="https://formsubmit.co/neironkabot@gmail.com" method="POST">
+            <!-- Настройка formsubmit.co -->
+            <input type="hidden" name="_subject" value="Новое сообщение с сайта!">
+            <input type="hidden" name="_next" value="https://yoursite.com/thanks.html">
+            <input type="hidden" name="_captcha" value="false">
+            
+            <input type="text" name="name" placeholder="Your name" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="text" name="website" placeholder="Your website (if exists)">
+            <textarea name="message" placeholder="How can I help?" required></textarea>
+            <button type="submit" class="submit-btn">Get In Touch</button>
+            <div class="social-links">
+                <a href="https://t.me/Quorvox_team" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff">
+                        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                    </svg>
+                </a>
+                <a href="https://github.com/Quorvox" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
+                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.941-2.611c3.14-.356 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.75c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                    </svg>
+                </a>
+                <a href="https://www.tiktok.com/@vainsgame?_r=1&_t=ZS-98QBKll3jKH" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
+                        <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/>
+                    </svg>
+                </a>
+            </div>
+        </form>
+        <div class="contact-info">
+            <h2>Заказать Можно<br>Прям на сайте</h2>
+            <p>I seek to push the limits of creativity to create high-engaging, user-friendly, and memorable interactive experiences.</p>
+            <div class="contact-details">
+                <p>neironkabot@gmail.com</p>
+                <p>+799665102418</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-logo">
+            <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 2L4 8v16l12 6 12-6V8L16 2z" fill="#fff"/>
+            </svg>
+            Personal
+        </div>
+        <div class="footer-right">
+            <p>@ 2026 Quorvox_team</p>
+            <p>Made in html</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMenu() {
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const mobileNav = document.querySelector('.mobile-nav');
+            mobileMenu.classList.toggle('active');
+            mobileNav.classList.toggle('active');
+        }
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.skill-card, .exp-card, .project-item, .testimonial-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease-out';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
